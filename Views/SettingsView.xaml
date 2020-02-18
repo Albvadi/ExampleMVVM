@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="ExampleMVVM.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExampleMVVM.Views"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <TextBlock Text="Settings View"
+                   FontSize="32"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top" />
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Command="{Binding disableHomeOption}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Disable Home option" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
+            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Margin="0 20 0 0" Command="{Binding disableAboutOption}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Disable About option" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
+            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Margin="0 20 0 0" Command="{Binding enableAllOptions}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Enable All Menu options" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
+            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Margin="0 20 0 0" Command="{Binding setTitleFromSettings}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Set title from settings" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
+        </StackPanel>
+
+        
+    </Grid>
+</UserControl>
