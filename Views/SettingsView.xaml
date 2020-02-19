@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExampleMVVM.Views"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:model="clr-namespace:ExampleMVVM.ViewModels"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance model:SettingsViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <TextBlock Text="Settings View"
@@ -14,10 +16,16 @@
                    VerticalAlignment="Top" />
 
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Command="{Binding disableHomeOption}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Disable Home option" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
-            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Margin="0 20 0 0" Command="{Binding disableAboutOption}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Disable About option" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
-            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Margin="0 20 0 0" Command="{Binding enableAllOptions}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Enable All Menu options" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
-            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Margin="0 20 0 0" Command="{Binding setTitleFromSettings}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Set title from settings" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
+
+            <CheckBox IsChecked="{Binding AboutEnabled}" Content="Enable / Diable About" />
+            <CheckBox IsChecked="{Binding HomeEnabled}" Content="Enable / Diable Home" />
+
+
+            <Button Controls:ControlsHelper.ContentCharacterCasing="Normal" Margin="0 20 0 0" Command="{Binding EnableAllOptions}" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Enable all Options" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" />
+
+            <TextBox Text="{Binding Path=(model:MainViewModel.GlobalTitle), Mode=TwoWay}" />
+
+
         </StackPanel>
 
         

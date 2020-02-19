@@ -1,82 +1,35 @@
 ﻿using MahApps.Metro.Controls;
 using MahApps.Metro.IconPacks;
+using System;
+using System.ComponentModel;
 
 namespace ExampleMVVM.ViewModels
 {
     public class MainViewModel : PropertyChangedViewModel
     {
-        private HamburgerMenuItemCollection _menuItems;
-        private HamburgerMenuItemCollection _menuOptionItems;
-
-        private string _globalTitle;
+        // This is needed for static Properties to Update. Cannot be moved to BaseClass.
+        public static event EventHandler<PropertyChangedEventArgs> StaticPropertyChanged;
+        public static void RaiseStaticPropertyChanged(string PropertyName)
+        {
+            StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(PropertyName));
+        }
 
         public MainViewModel()
         {
-            this.CreateMenuItems();
-            this.GlobalTitle = "Title from the MainViewModel constructor";
+            GlobalTitle = "Title from the MainViewModel constructor";
         }
 
-        public void CreateMenuItems()
+
+
+        private static string _GlobalTitle;
+        public static string GlobalTitle
         {
-            MenuItems = new HamburgerMenuItemCollection
-            {
-                new HamburgerMenuIconItem()
-                {
-                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Home},
-                    Label = "Home",
-                    ToolTip = "The Home view.",
-                    Tag = new HomeViewModel(this)
-                },
-                new HamburgerMenuIconItem()
-                {
-                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Help},
-                    Label = "About",
-                    ToolTip = "Some help.",
-                    Tag = new AboutViewModel(this)
-                }
-            };
-
-            MenuOptionItems = new HamburgerMenuItemCollection
-            {
-                new HamburgerMenuIconItem()
-                {
-                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Settings},
-                    Label = "Settings",
-                    ToolTip = "The Application settings.",
-                    Tag = new SettingsViewModel(this)
-                }
-            };
+            get { return _GlobalTitle; }
+            set { _GlobalTitle = value; RaiseStaticPropertyChanged(nameof(GlobalTitle)); }
         }
 
-        public HamburgerMenuItemCollection MenuItems
-        {
-            get { return _menuItems; }
-            set
-            {
-                if (Equals(value, _menuItems)) return;
-                _menuItems = value;
-            }
-        }
+        public SettingsViewModel SettingsView { get; } = new SettingsViewModel();
+        public AboutViewModel AboutView { get; } = new AboutViewModel();
 
-        public HamburgerMenuItemCollection MenuOptionItems
-        {
-            get { return _menuOptionItems; }
-            set
-            {
-                if (Equals(value, _menuOptionItems)) return;
-                _menuOptionItems = value;
-            }
-        }
-
-        public string GlobalTitle
-        {
-            get => _globalTitle;
-            set
-            {
-                _globalTitle = value;
-                OnPropertyChanged("GlobalTitle");
-            }
-            //set => SetProperty(ref _globalTitle, value);
-        }
     }
 }
