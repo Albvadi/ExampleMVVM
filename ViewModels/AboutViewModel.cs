@@ -14,7 +14,12 @@ namespace ExampleMVVM.ViewModels
             {
                 MainViewModel.GlobalTitle = "Title setted from AboutView";
                 AboutTitle = "This change instantly... WHY??";
+
+                // This forces Title to update from the default
+                RaisePropertyChanged(nameof(Title));
             });
+
+
         }
 
         public string Title => MainViewModel.GlobalTitle;
@@ -26,6 +31,7 @@ namespace ExampleMVVM.ViewModels
             get { return _AboutTitle; }
             set { _AboutTitle = value; RaisePropertyChanged(nameof(AboutTitle)); }
         }
+
 
     }
 }
