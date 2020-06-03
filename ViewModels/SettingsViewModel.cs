@@ -6,52 +6,33 @@ namespace ExampleMVVM.ViewModels
 {
     public class SettingsViewModel : PropertyChangedViewModel
     {
-        private MainViewModel _mainViewModel;
-
-        public DelegateCommand setTitleFromSettings { get; }
-        public DelegateCommand disableHomeOption { get; }
-        public DelegateCommand disableAboutOption { get; }
-        public DelegateCommand enableAllOptions { get; }
-
-        public SettingsViewModel(PropertyChangedViewModel mainViewModel)
+        private bool _HomeEnabled = true;
+        public bool HomeEnabled
         {
-            _mainViewModel = (MainViewModel)mainViewModel;
+            get { return _HomeEnabled; }
+            set { _HomeEnabled = value; RaisePropertyChanged(nameof(HomeEnabled)); }
+        }
 
-            setTitleFromSettings = new DelegateCommand(() =>
+        private bool _AboutEnabled = true;
+        public bool AboutEnabled
+        {
+            get { return _AboutEnabled; }
+            set { _AboutEnabled = value; RaisePropertyChanged(nameof(AboutEnabled)); }
+        }
+
+     
+        public DelegateCommand EnableAllOptions { get; }
+
+        public SettingsViewModel()
+        {
+            EnableAllOptions = new DelegateCommand((param) =>
             {
-                _mainViewModel.GlobalTitle = "Title setted from SettingsView, GLOBAL MODE!!!";
-            });
-
-            disableHomeOption = new DelegateCommand(() =>
+                HomeEnabled = true;
+                AboutEnabled = true;
+            },
+            (param) =>
             {
-                foreach (HamburgerMenuIconItem item in _mainViewModel.MenuItems) {
-                    if (item.Label == "Home")
-                    {
-                        item.IsEnabled = false;
-                    }
-                }
-
-            });
-
-            disableAboutOption = new DelegateCommand(() =>
-            {
-                foreach (HamburgerMenuIconItem item in _mainViewModel.MenuItems)
-                {
-                    if (item.Label == "About")
-                    {
-                        item.IsEnabled = false;
-                    }
-                }
-
-            });
-
-            enableAllOptions = new DelegateCommand(() =>
-            {
-                foreach (HamburgerMenuIconItem item in _mainViewModel.MenuItems)
-                {
-                    item.IsEnabled = true;
-                }
-
+                return !HomeEnabled || !AboutEnabled;
             });
         }
     }

@@ -1,15 +1,20 @@
 ﻿<mah:MetroWindow x:Class="ExampleMVVM.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ExampleMVVM"
-        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:base="clr-namespace:ExampleMVVM.Base"
-        xmlns:viewModels="clr-namespace:ExampleMVVM.ViewModels"
-        xmlns:views="clr-namespace:ExampleMVVM.Views"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="450" Width="800">
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:base="clr-namespace:ExampleMVVM.Base"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:local="clr-namespace:ExampleMVVM"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:viewModels="clr-namespace:ExampleMVVM.ViewModels"
+                 xmlns:views="clr-namespace:ExampleMVVM.Views"
+                 Title="MainWindow"
+                 x:Name="winMain"
+                 Width="800"
+                 Height="450"
+                 WindowStartupLocation="CenterScreen"
+                 mc:Ignorable="d">
 
     <Window.DataContext>
         <viewModels:MainViewModel />
@@ -30,15 +35,15 @@
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ContentControl Grid.Column="0"
+                    <ContentControl Content="{Binding Icon}"
+                                    Grid.Column="0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Content="{Binding Icon}"
                                     Focusable="False" />
-                    <TextBlock Grid.Column="1"
+                    <TextBlock Text="{Binding Label}"
+                               Grid.Column="1"
                                VerticalAlignment="Center"
-                               FontSize="16"
-                               Text="{Binding Label}" />
+                               FontSize="16" />
                 </Grid>
                 <DataTemplate.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mah:HamburgerMenu}}, Path=IsPaneOpen}" Value="False">
@@ -47,33 +52,60 @@
                 </DataTemplate.Triggers>
             </DataTemplate>
 
-            <!--  these are the templates for the view models  -->
-            <DataTemplate DataType="{x:Type viewModels:HomeViewModel}">
-                <views:HomeView DataContext="{Binding}" />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModels:AboutViewModel}">
-                <views:AboutView DataContext="{Binding}" />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
-                <views:SettingsView DataContext="{Binding}" />
-            </DataTemplate>
-            <!--<DataTemplate DataType="{x:Type viewModels:PrivateViewModel}">
-                <views:PrivateView DataContext="{Binding}" />
-            </DataTemplate>-->
-            
         </Grid.Resources>
 
         <mah:HamburgerMenu x:Name="HamburgerMenuControl"
                            DisplayMode="CompactInline"
-                           IsPaneOpen="True" OpenPaneLength="160"
+                           IsPaneOpen="True"
                            ItemTemplate="{StaticResource MenuItemTemplate}"
-                           ItemsSource="{Binding MenuItems}"
-                           OptionsItemTemplate="{StaticResource MenuItemTemplate}"
-                           OptionsItemsSource="{Binding MenuOptionItems}"
-                           >
+                           OpenPaneLength="160"
+                           SelectedIndex="0"
+                           OptionsItemTemplate="{StaticResource MenuItemTemplate}" >
 
+            <mah:HamburgerMenu.ItemsSource>
+                <mah:HamburgerMenuItemCollection>
+                    <mah:HamburgerMenuIconItem Icon="{iconPacks:Material Kind=Home}"
+                                               Label="Home"
+                                               IsEnabled="{Binding SettingsView.HomeEnabled}"
+                                               ToolTip="Home View">
+                        <mah:HamburgerMenuIconItem.Tag>
+                            <DataTemplate>
+                                <views:HomeView />
+                            </DataTemplate>
+                        </mah:HamburgerMenuIconItem.Tag>
+                    </mah:HamburgerMenuIconItem>
+
+                    <mah:HamburgerMenuIconItem Icon="{iconPacks:Material Kind=Help}"
+                                               Label="Help"
+                                               IsEnabled="{Binding SettingsView.AboutEnabled}"
+                                               ToolTip="Help me">
+                        <mah:HamburgerMenuIconItem.Tag>
+                            <DataTemplate>
+                                <views:AboutView DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mah:MetroWindow}, Path=DataContext.AboutView}" />
+                            </DataTemplate>
+                        </mah:HamburgerMenuIconItem.Tag>
+                    </mah:HamburgerMenuIconItem>
+
+                </mah:HamburgerMenuItemCollection>
+            </mah:HamburgerMenu.ItemsSource>
+
+            <mah:HamburgerMenu.OptionsItemsSource>
+                <mah:HamburgerMenuItemCollection>
+                    <mah:HamburgerMenuIconItem Icon="{iconPacks:Material Kind=Settings}"
+                                               Label="Settings"
+                                               ToolTip="Some Settings">
+                        <mah:HamburgerMenuIconItem.Tag>
+                            <DataTemplate>
+                                <views:SettingsView DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mah:MetroWindow}, Path=DataContext.SettingsView}" />
+                            </DataTemplate>
+                        </mah:HamburgerMenuIconItem.Tag>
+                    </mah:HamburgerMenuIconItem>
+
+                </mah:HamburgerMenuItemCollection>
+            </mah:HamburgerMenu.OptionsItemsSource>
+            
             <!--  select the tag (ViewModel) of the selected item (options item)  -->
-            <mah:HamburgerMenu.Content>
+            <mah:HamburgerMenu.ContentTemplate>
                 <MultiBinding Converter="{StaticResource SelectedItemToContentConverter}">
                     <Binding FallbackValue="{x:Null}"
                              Mode="OneWay"
@@ -84,7 +116,7 @@
                              Path="SelectedOptionsItem.Tag"
                              RelativeSource="{RelativeSource Self}" />
                 </MultiBinding>
-            </mah:HamburgerMenu.Content>
+            </mah:HamburgerMenu.ContentTemplate>
 
         </mah:HamburgerMenu>
 

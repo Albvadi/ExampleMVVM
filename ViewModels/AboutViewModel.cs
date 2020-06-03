@@ -4,38 +4,56 @@ namespace ExampleMVVM.ViewModels
 {
     public class AboutViewModel : PropertyChangedViewModel
     {
-        private MainViewModel _mainViewModel;
+        public DelegateCommand SetTitleFromAbout { get; }
 
-        private string _aboutTitle;
-
-        public DelegateCommand setTitleFromAbout { get; }
-
-        public AboutViewModel(PropertyChangedViewModel mainViewModel)
+        public AboutViewModel()
         {
-            _mainViewModel = (MainViewModel) mainViewModel;
             AboutTitle = "Initial About Title";
 
-            setTitleFromAbout = new DelegateCommand(() =>
+            SetTitleFromAbout = new DelegateCommand((param) =>
             {
-                _mainViewModel.GlobalTitle = "Title setted from AboutView";
+                MainViewModel.GlobalTitle = "Test";
                 AboutTitle = "This change instantly... WHY??";
+
+                // This forces Title to update from the default
+                RaisePropertyChanged(nameof(Title));
+                Validate();
             });
+
+            MainViewModel.StaticPropertyChanged += (s,e) => { Validate(); };
+
+            Validate();
         }
 
         public string Title
         {
-            get { return _mainViewModel.GlobalTitle; }
+            get { return MainViewModel.GlobalTitle; }
+            set { MainViewModel.GlobalTitle = value; Validate(); }
         }
 
+
+        private string _AboutTitle;
         public string AboutTitle
         {
-            get => _aboutTitle;
-            set
-            {
-                _aboutTitle = value;
-                OnPropertyChanged("aboutTitle");
-            }
-            //set => SetProperty(ref _globalTitle, value);
+            get { return _AboutTitle; }
+            set { _AboutTitle = value; RaisePropertyChanged(nameof(AboutTitle)); }
         }
+
+
+        void Validate()
+        {
+            ClearErrors(nameof(Title));
+
+            if (string.IsNullOrWhiteSpace(Title))
+            {
+                AddError(nameof(Title), "Title should not be empty");
+            }
+            else if (Title == "Test")
+            {
+                AddError(nameof(Title), "You typed Test");
+            }
+        }
+
+
     }
 }

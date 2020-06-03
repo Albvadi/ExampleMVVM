@@ -1,27 +1,79 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace ExampleMVVM.ViewModels
 {
-    public class PropertyChangedViewModel : INotifyPropertyChanged
+    public class PropertyChangedViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
     {
+
+        #region INotifyPropertyChanged
+
         public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void RaisePropertyChanged(string PropertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
 
-        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        #endregion
+
+        #region INotifyDataErrorInfo
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        public bool HasErrors => _errorsByPropertyName.Count > 0;
+
+        private readonly Dictionary<string, List<string>> _errorsByPropertyName = new Dictionary<string, List<string>>();
+
+        public IEnumerable GetErrors(string propertyName)
         {
-            if (!EqualityComparer<T>.Default.Equals(storage, value))
+            if (string.IsNullOrEmpty(propertyName))
             {
-                storage = value;
-                OnPropertyChanged(propertyName);
-                return true;
+                return null;
             }
-            return false;
+            else
+            {
+                return _errorsByPropertyName.ContainsKey(propertyName)
+                        ? _errorsByPropertyName[propertyName]
+                        : null;
+            }
+
         }
+
+        public bool GetHasError(string PropertyName)
+        {
+            return _errorsByPropertyName.ContainsKey(PropertyName);
+        }
+
+        public void AddError(string propertyName, string error)
+        {
+            if (!_errorsByPropertyName.ContainsKey(propertyName))
+                _errorsByPropertyName[propertyName] = new List<string>();
+
+            if (!_errorsByPropertyName[propertyName].Contains(error))
+            {
+                _errorsByPropertyName[propertyName].Add(error);
+                OnErrorsChanged(propertyName);
+            }
+        }
+
+        public void ClearErrors(string propertyName)
+        {
+            if (_errorsByPropertyName.ContainsKey(propertyName))
+            {
+                _errorsByPropertyName.Remove(propertyName);
+                OnErrorsChanged(propertyName);
+            }
+        }
+        public void OnErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+
     }
 }

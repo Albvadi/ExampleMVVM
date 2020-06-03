@@ -9,6 +9,7 @@ namespace ExampleMVVM
     {
         public MainWindow()
         {
+            DataContext = new ViewModels.MainViewModel();
             InitializeComponent();
         }
     }
