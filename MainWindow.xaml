@@ -70,7 +70,7 @@
                                                ToolTip="Home View">
                         <mah:HamburgerMenuIconItem.Tag>
                             <DataTemplate>
-                                <views:HomeView />
+                                <views:HomeView DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mah:MetroWindow}, Path=DataContext.HomeView}" />
                             </DataTemplate>
                         </mah:HamburgerMenuIconItem.Tag>
                     </mah:HamburgerMenuIconItem>

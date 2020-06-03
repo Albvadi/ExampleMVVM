@@ -28,6 +28,7 @@ namespace ExampleMVVM.ViewModels
             set { _GlobalTitle = value; RaiseStaticPropertyChanged(nameof(GlobalTitle)); }
         }
 
+        public HomeViewModel HomeView { get; } = new HomeViewModel();
         public SettingsViewModel SettingsView { get; } = new SettingsViewModel();
         public AboutViewModel AboutView { get; } = new AboutViewModel();
 

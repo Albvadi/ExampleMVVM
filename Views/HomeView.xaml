@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExampleMVVM.Views"
              xmlns:model="clr-namespace:ExampleMVVM.ViewModels"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -17,5 +18,9 @@
                    FontSize="32"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center" />
+
+        <Button Command="{Binding SearchEmployeeAction}" Margin="85,0,90,75" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}" BorderThickness="0" Content="Search" Height="20" VerticalAlignment="Bottom" />
+
+        <Controls:ProgressRing IsActive="{Binding IsSearching}" VerticalAlignment="Top" Margin="120,240,120,0"/>
     </Grid>
 </UserControl>
