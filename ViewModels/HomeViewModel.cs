@@ -23,6 +23,10 @@ namespace ExampleMVVM.ViewModels
                 await PutTaskDelay();
 
                 IsSearching = false;
+
+                // We have an async method. That means we may not recieve the updates to the UI. With the following line we tell 
+                // the Command to do a Update on CanExecute. 
+                SearchEmployeeAction.OnCanExecuteChanged();
             },
             (param) =>
             {
